@@ -72,12 +72,11 @@ import {
 } from "./types/zod";
 import {
 	assertConfirmation,
+	assertConsentStillCovers,
 	clientAllowsGrant,
-	consentCovers,
 	decryptStoredClientSecret,
 	destructureCredentials,
 	extractClientCredentials,
-	findConsent,
 	getAuthEndpointUrl,
 	getClient,
 	getJwtPlugin,
@@ -2108,48 +2107,6 @@ async function checkVerificationValue(
 		authorizedResources: storedResources,
 		authorizationCodeId,
 	};
-}
-
-/**
- * A pending authorization code follows its consent. Redeeming it needs a stored
- * consent that still covers what the code authorizes, so a code issued before
- * the user deleted or narrowed their consent mints nothing. A consent deleted
- * and given again for the same request leaves the code valid, because the user
- * approved the same client and scopes again. A client that skips consent has
- * none to check.
- */
-async function assertConsentStillCovers(
-	ctx: GenericEndpointContext,
-	client: Pick<SchemaClient<Scope[]>, "clientId" | "skipConsent">,
-	code: {
-		userId: string;
-		referenceId?: string;
-		scopes: readonly string[];
-		resources: readonly string[];
-		userInfoClaims: readonly string[];
-	},
-) {
-	if (client.skipConsent) return;
-	const consent = await findConsent(
-		ctx,
-		client.clientId,
-		code.userId,
-		code.referenceId,
-	);
-	if (!consent) {
-		throw new APIError("BAD_REQUEST", {
-			error_description: "consent revoked",
-			error: "invalid_grant",
-		});
-	}
-	if (
-		!consentCovers(consent, code.scopes, code.resources, code.userInfoClaims)
-	) {
-		throw new APIError("BAD_REQUEST", {
-			error_description: "consent no longer covers this authorization",
-			error: "invalid_grant",
-		});
-	}
 }
 
 /**
