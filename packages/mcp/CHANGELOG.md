@@ -1,5 +1,16 @@
 # @better-auth/mcp
 
+## 1.7.26
+
+### Patch Changes
+
+- [#12624](https://github.com/better-auth/better-auth/pull/12624) [`7604fd4`](https://github.com/better-auth/better-auth/commit/7604fd45d8587699bdba74705a93e66a01ac4c6b) Thanks [@gustavovalverde](https://github.com/gustavovalverde)! - The OAuth provider and `requireMcpAuth` no longer cache keys returned by a custom JWT plugin `adapter.getJwks`, so keys it returns for one tenant or request can no longer verify a token presented in another. They now call it on every verification; cache inside the store if reads are expensive. The built-in database store is still cached.
+
+- [#12624](https://github.com/better-auth/better-auth/pull/12624) [`7604fd4`](https://github.com/better-auth/better-auth/commit/7604fd45d8587699bdba74705a93e66a01ac4c6b) Thanks [@gustavovalverde](https://github.com/gustavovalverde)! - A custom JWT plugin `adapter.getJwks` again receives the request being verified when the OAuth provider reads signing keys for introspection, revocation, or end-session, and when `requireMcpAuth` verifies a token. Since 1.7.25 it received only the auth context, without `request` or `headers`, so a key store that picks keys by the request's host or headers found none.
+
+- Updated dependencies [[`d04ea26`](https://github.com/better-auth/better-auth/commit/d04ea262d2c39df5ef76d433dca6a44dfa84ed1e), [`7604fd4`](https://github.com/better-auth/better-auth/commit/7604fd45d8587699bdba74705a93e66a01ac4c6b), [`7604fd4`](https://github.com/better-auth/better-auth/commit/7604fd45d8587699bdba74705a93e66a01ac4c6b)]:
+  - @better-auth/oauth-provider@1.7.26
+
 ## 1.7.25
 
 ### Patch Changes

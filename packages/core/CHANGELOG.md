@@ -1,5 +1,15 @@
 # @better-auth/core
 
+## 1.7.26
+
+### Patch Changes
+
+- [#12620](https://github.com/better-auth/better-auth/pull/12620) [`ddcb9a2`](https://github.com/better-auth/better-auth/commit/ddcb9a25e32ced7ba7528d6a2ca04e9705c51a61) Thanks [@gustavovalverde](https://github.com/gustavovalverde)! - Authorization URLs now keep empty segments of the authorization endpoint's query, such as a trailing or doubled `&`. The rest of the endpoint's query is sent as published, except for the parameters Better Auth sets, which still replace the endpoint's own values.
+
+- [#12315](https://github.com/better-auth/better-auth/pull/12315) [`836b13e`](https://github.com/better-auth/better-auth/commit/836b13e6d5bebf6b1fec37eab69714c0009943bb) Thanks [@honuuk](https://github.com/honuuk)! - Kakao sign-in now uses PKCE, sending `code_challenge` in the authorization request and `code_verifier` in the token request.
+
+- [#12625](https://github.com/better-auth/better-auth/pull/12625) [`54c1b69`](https://github.com/better-auth/better-auth/commit/54c1b693c64f85ba602584d2f6524fca961fb4e7) Thanks [@gustavovalverde](https://github.com/gustavovalverde)! - A DPoP proof's replay reservation now lasts one second past the proof's accepted window. Before, the reservation could expire up to a second before the proof stopped being accepted, so a proof could be reused once in that last second. This affects the in-memory, database, and secondary-storage replay stores.
+
 ## 1.7.25
 
 ### Patch Changes
